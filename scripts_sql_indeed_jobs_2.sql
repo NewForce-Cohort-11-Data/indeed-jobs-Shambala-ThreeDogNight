@@ -102,11 +102,36 @@ AND title NOT ILIKE '%Analytics%';
 -- Question Bonus: You want to understand which jobs requiring SQL are hard to fill. Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks.
 --•	Disregard any postings where the domain is NULL.
 --•	Order your results so that the domain with the greatest number of hard to fill jobs is at the top.
---•	Which 4 industries are in the top 4 on this list? How many jobs have been listed for more than 3 weeks for each of the top 4? 
+--•	Which industries are in the top 4 on this list? How many jobs have been listed for more than 3 weeks for each of the top 4? 
 
--- Answer: Consulting and Business Services, Consumer Goods and Services, 
-SELECT DISTINCT ("domain"), title, skill, days_since_posting, ("domain"), COUNT (DISTINCT ("domain")), COUNT (title) AS num_postings
-FROM data_analyst_jobs
-WHERE skill IN ('SQL') AND domain IS NOT NULL
-GROUP BY title, skill, days_since_posting, ("domain")
-ORDER BY days_since_posting DESC, num_postings DESC,("domain");
+-- Answer: Internet and Software, Banks and Financial Services, Consulting and Business Services, Health Care 
+
+SELECT 
+	domain AS industry, 
+	COUNT (days_since_posting) AS total_hard_to_fill_jobs
+FROM 
+	data_analyst_jobs
+WHERE 
+	domain IS NOT NULL
+	AND skill ILIKE '%SQL%' 
+	AND days_since_posting > 21
+GROUP BY 
+	industry
+ORDER BY 
+	total_hard_to_fill_jobs DESC;
+
+-- FROM: Mike Phillips (Group 1); use this formatting style
+
+SELECT
+	domain AS industry,
+	COUNT(days_since_posting) AS total_hard_to_fill_jobs
+FROM
+	data_analyst_jobs
+WHERE
+	domain IS NOT NULL
+	AND skill ILIKE '%SQL%'
+	AND days_since_posting > 21
+GROUP BY
+	industry
+ORDER BY total_hard_to_fill_jobs DESC
+LIMIT 4;
